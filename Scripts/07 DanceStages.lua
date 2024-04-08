@@ -136,7 +136,11 @@ function ReFillList(list1,list2)
     end
 end
 
+local characterNameCache;
 function GetAllCharacterNames()
+	if characterNameCache and next(characterNameCache) ~= nil then
+		return characterNameCache;
+	end;
     local chars = {}
     local _chars = FILEMAN:GetDirListing("/Characters/", true, false)
     SortList(_chars,chars,"%(A%)")
@@ -172,6 +176,7 @@ function GetAllCharacterNames()
     table.remove(chars,IndexKey(chars,"DanceRepo"))
     table.remove(chars,IndexKey(chars,"default"))
     table.insert(chars,1,"Random")
+	characterNameCache = chars;
     return chars
 end
 
@@ -187,18 +192,16 @@ function SelectCharacter()
 
 		LoadSelections = 
 		function(self, list, pn)
-			if GetUserPref("SelectCharacter"..pn) == nil or tonumber(GetUserPref("SelectCharacter"..pn)) then
-				SetUserPref("SelectCharacter"..pn,"Random")
-			end
-			local Load=GetUserPref("SelectCharacter"..pn)
-			list[IndexKey(choiceList,Load)]=true
+			local character = ReadOrCreatRageValueForPlayer(pn, "Character", "Random")
+
+			list[IndexKey(choiceList,character)]=true
 		end;
 
 		SaveSelections = 
 		function(self, list, pn)
 			for number=0,999 do
 				if list[number] then
-					WritePrefToFile("SelectCharacter"..pn,choiceList[number]);
+					SaveRageValueForPlayer(pn, "Character", choiceList[number])
 					break;
 				end;
 			end;
@@ -234,7 +237,11 @@ function GetCharacter(pn)
 	end
 end
 
+local danceStageNameCache;
 function GetAllDanceStagesNames()
+	if danceStageNameCache and next(danceStageNameCache) ~= nil then
+		return danceStageNameCache;
+	end;
     local DanceStagesList = {}
     local _DanceStagesList = FILEMAN:GetDirListing("/DanceStages/", true, false)
     table.remove(_DanceStagesList,IndexKey(_DanceStagesList,"StageMovies"))
@@ -254,6 +261,7 @@ function GetAllDanceStagesNames()
     ReFillList(_DanceStagesList,DanceStagesList)
 	table.insert(DanceStagesList,1,"DEFAULT")
     table.insert(DanceStagesList,2,"RANDOM")
+	danceStageNameCache = DanceStagesList;
     return DanceStagesList
 end
 

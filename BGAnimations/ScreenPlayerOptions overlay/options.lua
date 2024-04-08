@@ -22,25 +22,24 @@ local rownames;
 if GAMESTATE:IsExtraStage() or GAMESTATE:IsExtraStage2() then
 	rownames = { "Speed", "Accel", "Appearance", "Turn", "Hide", "Scroll", "NoteSkins", "Remove", "Freeze", "Jump" }
 else
-	if GetUserPref("OptionRowGameplayBackground")=='DanceStages' then
-		if GetUserPref("NTOption")=='On' then
-			rownames = { "Speed", "Accel", "Appearance", "Turn", "Hide", "Scroll", "NoteSkins", "Remove", "Freeze", "Jump", "Gauge", "DanceStage", "Arrow" }
-		else
-			rownames = { "Speed", "Accel", "Appearance", "Turn", "Hide", "Scroll", "NoteSkins", "Remove", "Freeze", "Jump", "Gauge", "DanceStage" }
-		end
-	elseif GetUserPref("OptionRowGameplayBackground")=='SNCharacters' then
-		if GetUserPref("NTOption")=='On' then
-			rownames = { "Speed", "Accel", "Appearance", "Turn", "Hide", "Scroll", "NoteSkins", "Remove", "Freeze", "Jump", "Gauge", "Characters", "Arrow" }
-		else
-			rownames = { "Speed", "Accel", "Appearance", "Turn", "Hide", "Scroll", "NoteSkins", "Remove", "Freeze", "Jump", "Gauge", "Characters" }
-		end
-	else
-		if GetUserPref("NTOption")=='On' then
-			rownames = { "Speed", "Accel", "Appearance", "Turn", "Hide", "Scroll", "NoteSkins", "Remove", "Freeze", "Jump", "Gauge", "Arrow" }
-		else
-			rownames = { "Speed", "Accel", "Appearance", "Turn", "Hide", "Scroll", "NoteSkins", "Remove", "Freeze", "Jump", "Gauge", }
-		end
+	-- Must correspond to OptionNumber() in Other.lua
+	rownames = { "Speed", "Accel", "Appearance", "Turn", "Hide", "Scroll", "NoteSkins", "Remove", "Freeze", "Jump" }
+	
+	if GetUserPref("NTOption")=='On' then
+		rownames.insert("Arrow")
 	end
+	
+	if GetUserPref("OptionRowGameplayBackground")=='DanceStages' then
+		table.insert(rownames, "DanceStage")
+		table.insert(rownames, "Character")
+		-- table.insert(rownames, "Mate1")
+		-- table.insert(rownames, "Mate2")
+		-- table.insert(rownames, "Mate3")
+	elseif GetUserPref("OptionRowGameplayBackground")=='SNCharacters' then
+		table.insert(rownames, "Characters")
+	end
+	
+	table.insert(rownames, "Gauge")
 end
 
 local function GetOptionName(screen, idx)
@@ -57,6 +56,9 @@ function setting(self,screen)
 	local choice = row:GetChoiceInRowWithFocus(pn);
 	if THEME:GetMetric( "ScreenOptionsMaster",name.."Explanation" ) then
 		self:settext(THEME:GetString("OptionItemExplanations",name..tostring(choice)));
+	elseif name == "Speed" then
+		local speedRow = OptionRowSpeed();
+		self:settext(speedRow.GetExplanation(choice+1));
 	else self:settext("");
 	end;
 end;
@@ -165,13 +167,17 @@ local function MakeRow(rownames, idx)
 					local screen = SCREENMAN:GetTopScreen();
 					local song = GAMESTATE:GetCurrentSong()
 					if song then
-						local speedmult = screen:GetOptionRow(0):GetChoiceInRowWithFocus(pn)
-						local speedstring = THEME:GetString("OptionItemNames","Speed"..speedmult)
-						local speedsub = string.gsub(speedstring, "x", "")
-							if song:IsDisplayBpmRandom() or song:IsDisplayBpmSecret() then
-								text = "?"
+						local index = screen:GetOptionRow(0):GetChoiceInRowWithFocus(pn)
+						local speedRow = OptionRowSpeed();
+						local speeds = speedRow.Names
+						local speedsub = string.gsub(speeds[index+1], "x", "")
+						if song:IsDisplayBpmRandom() or song:IsDisplayBpmSecret() then
+							text = "?"
+						else
+							local dispBPMs = song:GetDisplayBpms()
+							if string.find(speedsub, "c") then
+								text = string.gsub(speedsub, "c", "")
 							else
-								local dispBPMs = song:GetDisplayBpms()
 								local BPM1Mod = math.floor(dispBPMs[1]*speedsub)
 								if song:IsDisplayBpmConstant() then
 									text = BPM1Mod
@@ -180,6 +186,7 @@ local function MakeRow(rownames, idx)
 									text = BPM1Mod.." - "..BPM2Mod
 								end
 							end
+						end
 						s:settext(text);
 						s:x(65)
 						s:zoom(0.9)
@@ -235,6 +242,53 @@ local function MakeRow(rownames, idx)
 			};
 		};
 		--DANCESTAGES CARD
+		--CHARACTER CARD
+		Def.ActorFrame{
+			Condition=GetUserPref("OptionRowGameplayBackground")=='DanceStages';
+			OnCommand=function(s) s:queuecommand("Set") end,
+			SetCommand=function(self)
+				if not IsExitRow() then
+					local screen = SCREENMAN:GetTopScreen();
+					local song = GAMESTATE:GetCurrentSong()
+					if screen then
+						if GetOptionName(screen,idx) == "Characters" then
+							self:visible(true):xy(pn==PLAYER_1 and -280 or 280,-150):zoom(0.3)
+						end
+					else
+						self:queuecommand("Set");
+					end;
+				end;
+			end;
+			GainFocusCommand=function(s) s:finishtweening()
+				local screen = SCREENMAN:GetTopScreen();
+				local song = GAMESTATE:GetCurrentSong()
+				s:diffusealpha(GetOptionName(screen,idx) == "Characters" and 1 or 0)
+			end,
+			LoseFocusCommand=function(s) s:finishtweening():diffusealpha(0) end,
+			[p"MenuLeft%MessageCommand"]=function(s) s:playcommand("Set") end,
+			[p"MenuRight%MessageCommand"]=function(s) s:playcommand("Set") end,	
+			Def.Sprite{
+				OnCommand=function(s) s:queuecommand("Set") end,
+				SetCommand=function(s)
+					local screen = SCREENMAN:GetTopScreen();
+					local choice = screen:GetOptionRow(idx-1):GetChoiceInRowWithFocus(pn);
+					local CharacterList = GetAllCharacterNames()
+					local DSName = CharacterList[IndexKey(CharacterList,GetUserPref("SelectDanceStage"))]
+					if choice == 0 then
+						s:Load(THEME:GetPathG("","_shared/stages_default"))
+					elseif choice == 1 then
+						s:Load(THEME:GetPathG("","_shared/stages_random"))
+					else	
+						if FILEMAN:DoesFileExist("/Characters/"..CharacterList[choice+1].."/Card.png") then
+							s:Load("/Characters/"..CharacterList[choice+1].."/Card.png")				
+						else
+							s:Load(THEME:GetPathG("","_blank"))
+						end
+					end
+				end,
+			};
+		};
+		--CHARACTER CARD
 		
 		LoadFont("_avenirnext lt pro bold Bold 20px")..{
 			InitCommand=cmd(x,64;uppercase,true;zoom,0.8;maxwidth,150);
@@ -248,24 +302,10 @@ local function MakeRow(rownames, idx)
                         if THEME:GetMetric("ScreenOptionsMaster",name.."Explanation") then
                             return THEME:GetString("OptionItemNames",name..tostring(choice))
                         else
-                            return ""
+                            return "#"..choice -- Was ""
                         end
                     end
-					if name ~= "NoteSkins" and name ~= "DanceStage" and name ~= "Characters" then
-						--normal option, handle default choice coloring.
-                        local ChoiceText = ChoiceToText(choice)
-                        --for most options, 0 is the default choice, for Speed it is 3.
-						if ChoiceText and ChoiceText == ChoiceToText(name == "Speed" and 3 or 0) then
-							self:diffuse(color("#06ff06")):diffusetopedge(color("#74ff74"));
-						else
-							if ChoiceText == "LIFE4" or ChoiceText == "RISKY" then
-								self:diffuse(color("#ff0606")):diffusetopedge(color("#ff7474"));
-							else
-								self:diffuse(color("1,1,1,1"));
-							end
-						end;
-                        self:settext(ChoiceText);
-					elseif name == "NoteSkins" then
+					if name == "NoteSkins" then
 						self:settext(NOTESKIN:GetNoteSkinNames()[choice+1])
 					elseif name == "DanceStage" then
 						local DanceStagesNames = GetAllDanceStagesNames()
@@ -291,8 +331,29 @@ local function MakeRow(rownames, idx)
 								self:settext(Characters.GetAllCharacterNames()[choice]):diffuse(color("1,1,1,1"))
 							end;
 						end
+					elseif name == "Speed" then
+						local speedRow = OptionRowSpeed();
+						local speeds = speedRow.Names;
+						if choice + 1 == speedRow.DefaultOptionIndex then
+							self:diffuse(color("#06ff06")):diffusetopedge(color("#74ff74"));
+						else
+							self:diffuse(color("1,1,1,1"));
+						end;
+						self:settext(speeds[choice+1]);
 					else
-						self:settext("")
+						--normal option, handle default choice coloring.
+                        local ChoiceText = ChoiceToText(choice)
+                        --for most options, 0 is the default choice, for Speed it is 3.
+						if ChoiceText and ChoiceText == ChoiceToText(name == "Speed" and 3 or 0) then
+							self:diffuse(color("#06ff06")):diffusetopedge(color("#74ff74"));
+						else
+							if ChoiceText == "LIFE4" or ChoiceText == "RISKY" then
+								self:diffuse(color("#ff0606")):diffusetopedge(color("#ff7474"));
+							else
+								self:diffuse(color("1,1,1,1"));
+							end
+						end;
+                        self:settext(ChoiceText);
 					end;
 				end;
 			end;

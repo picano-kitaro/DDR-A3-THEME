@@ -38,10 +38,11 @@ local t = Def.ActorFrame{};
 
 if GAMESTATE:IsDemonstration() then
 	for pn in ivalues(GAMESTATE:GetEnabledPlayers()) do
+		local SelectedCharacter = ReadOrCreatRageValueForPlayer(pn, "Character", "Random")
 		local CharaRandom = GetAllCharacterNames()
 			table.remove(CharaRandom,IndexKey(CharaRandom,"Random"))
 			table.remove(CharaRandom,IndexKey(CharaRandom,"None"))
-		if GetUserPref("SelectCharacter"..pn) == "Random" then
+		if SelectedCharacter == "Random" then
 			WritePrefToFile("CharaRandom"..pn,CharaRandom[math.random(#CharaRandom)]);
 		end
 		GAMESTATE:SetCharacter(pn,CharaRandom[math.random(#CharaRandom)])

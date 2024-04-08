@@ -38,6 +38,40 @@ function MachineOrProfile(pn)
 	end
 end
 
+-- I hate this. I'm only writing this generic function for compatability
+-- and easier future update sake
+function ReadOrCreatRageValueForPlayer(PlayerNumber, ValueName, DefaultValue)
+	local PlayerUID = GetPlayerUIDFromNumber(PlayerNumber)
+	local File = RageFileUtil:CreateRageFile()
+	if File:Open("Save/"..ValueName.."/"..PlayerUID..".txt",1) then 
+		local str = File:Read();
+		MyValue =str;
+	else
+		File:Open("Save/"..ValueName.."/"..PlayerUID..".txt",2);
+		File:Write(DefaultValue);
+		MyValue=DefaultValue;
+	end
+	File:Close();
+	return MyValue;
+end
+
+function SaveRageValueForPlayer(PlayerNumber, ValueName, MyValue)
+	local PlayerUID = GetPlayerUIDFromNumber(PlayerNumber)
+	local File = RageFileUtil:CreateRageFile();
+	File:Open("Save/"..ValueName.."/"..PlayerUID..".txt",2);
+	File:Write(tostring(MyValue));
+	File:Close();
+end
+
+function GetPlayerUIDFromNumber(PlayerNumber)
+	local pf = PROFILEMAN:GetProfile(PlayerNumber);
+	local pid = "UnknownPlayerUID";
+	if pf then 
+		pid = pf:GetGUID()
+	end
+	return pid
+end
+
 function ReadOrCreateAppearancePlusValueForPlayer(PlayerUID, MyValue)
 	local AppearancePlusFile = RageFileUtil:CreateRageFile()
 	if AppearancePlusFile:Open("Save/AppearancePlus/"..PlayerUID..".txt",1) then 
@@ -52,7 +86,7 @@ function ReadOrCreateAppearancePlusValueForPlayer(PlayerUID, MyValue)
 	return MyValue;
 end
 
-function SaveAppearancePlusValueForPlayer( PlayerUID, MyValue)
+function SaveAppearancePlusValueForPlayer(PlayerUID, MyValue)
 	local AppearancePlusFile2 = RageFileUtil:CreateRageFile();
 	AppearancePlusFile2:Open("Save/AppearancePlus/"..PlayerUID..".txt",2);
 	AppearancePlusFile2:Write(tostring(MyValue));
@@ -352,25 +386,22 @@ end
 --Player Options
 
 function OptionNumber()
-	if GetUserPref("OptionRowGameplayBackground")=='DanceStages' then
-		if GetUserPref("NTOption")=='On' then
-			return "Speed,Accel,Appearance,Turn,Hide,Scroll,NoteSkins,Cut,Freeze,Jump,ArrowType,SelectStage,Risky"
-		else
-			return "Speed,Accel,Appearance,Turn,Hide,Scroll,NoteSkins,Cut,Freeze,Jump,SelectStage,Risky"
-		end
-	elseif GetUserPref("OptionRowGameplayBackground")=='SNCharacters' then
-		if GetUserPref("NTOption")=='On' then
-			return "Speed,Accel,Appearance,Turn,Hide,Scroll,NoteSkins,Cut,Freeze,Jump,ArrowType,Characters,Risky"
-		else
-			return "Speed,Accel,Appearance,Turn,Hide,Scroll,NoteSkins,Cut,Freeze,Jump,Characters,Risky"
-		end
-	else
-		if GetUserPref("NTOption")=='On' then
-			return "Speed,Accel,Appearance,Turn,Hide,Scroll,NoteSkins,Cut,Freeze,Jump,ArrowType,Risky"
-		else
-			return "Speed,Accel,Appearance,Turn,Hide,Scroll,NoteSkins,Cut,Freeze,Jump,Risky"
-		end
+	-- Must correspond to rownames in options.lua
+	local opts = "Speed,Accel,Appearance,Turn,Hide,Scroll,NoteSkins,Cut,Freeze,Jump"
+	
+	if GetUserPref("NTOption")=='On' then
+		opts = opts..",ArrowType"
 	end
+	
+	if GetUserPref("OptionRowGameplayBackground")=='DanceStages' then
+		opts = opts..",SelectStage,SelectCharacter" --,Mate1,Mate2,Mate3"
+	elseif GetUserPref("OptionRowGameplayBackground")=='SNCharacters' then
+		opts = opts..",Characters"
+	end
+	
+	opts = opts..",Risky"
+	
+	return opts;
 end
 
 function GetNoteSkinType(pn)

@@ -1,3 +1,65 @@
+local speedRowCache;
+function OptionRowSpeed()
+	if speedRowCache and next(speedRowCache) ~= nil then
+		return speedRowCache;
+	end;
+	local options = {};
+	local names = {};
+	local xMods = {"0.25","0.5","0.75","1","1.25","1.5","1.75","2","2.25","2.5","2.75","3","3.25","3.5","3.75","4","4.5","5","5.5","6","6.5","7","7.5","8"} 
+	for _, i in ipairs(xMods) do
+		table.insert(options, string.format("mod,%sx;name,x%s", i, i))
+		table.insert(names, i.."x")
+	end
+
+	local cMods = {"100","150","200","250","300","350","400"} 
+	for _, i in ipairs(cMods) do
+		table.insert(options, string.format("mod,c%s;name,c%s", i, i))
+		table.insert(names, "c"..i)
+	end
+	
+	local t = {
+		Name = "Speed";
+		LayoutType = "ShowAllInRow";
+		SelectType = "SelectOne";
+		OneChoiceForAllPlayers = false;
+		ExportOnChange = true;
+		Choices = options;
+		Names = names;
+		DefaultOptionIndex = 4;
+		GetExplanation = function(idx)
+			return string.format(THEME:GetString("OptionItemExplanations","SpeedTemplate"), names[idx]);
+		end;
+		
+		LoadSelections = function(self, list, pn)
+			local ps = GAMESTATE:GetPlayerState(pn);
+			local po = ps:GetPlayerOptions("ModsLevel_Preferred");
+			local XMod = po:XMod() or 0;
+
+			local modstring = ps:GetPlayerOptionsString("ModsLevel_Preferred");
+			local CModString = string.match(modstring, "[Cc](%d+)") or "xxxxxxxxxx";
+
+			for i=1,#options do
+				if string.match(options[i], ","..XMod.."x;") then
+					list[i] = true
+				elseif string.match(options[i], CModString) then
+					list[i] = true
+				end
+			end
+		end;
+		SaveSelections = function(self, list, pn)
+			local setValue = "1x"
+			for i=1,#list do
+				if list[i] then
+					setValue = string.match(options[i], ",(.*);")
+				end
+			end
+			GAMESTATE:GetPlayerState(pn):SetPlayerOptions('ModsLevel_Preferred', setValue)
+		end;
+	};
+	setmetatable( t, t );
+	speedRowCache = t;
+	return t;
+end
 function OptionRowAppearancePlus()
 	local t = {
 		Name="AppearancePlus",

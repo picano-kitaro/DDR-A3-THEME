@@ -208,6 +208,10 @@ Branch = {
 	end,
 	
 	PlayerOptions = function()
+		if true then -- Todo : Add a toggle
+			return "ScreenPlayerOptions"
+		end;
+
 		local pm = GAMESTATE:GetPlayMode()
 		local restricted = { "PlayMode_Oni", "PlayMode_Rave","PlayMode_Nonstop"
 			--"PlayMode_Battle" -- ??

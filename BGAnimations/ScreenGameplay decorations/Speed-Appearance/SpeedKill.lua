@@ -1,7 +1,7 @@
 local t = Def.ActorFrame {};
 -- speedkills
 -- proof of concept for in-gameplay speed change
--- [ja] ƒv?ƒC?‚ÉƒnƒCƒXƒs‚ğ•ÏX‚·‚éŠT”OÀØƒR[ƒh
+-- [ja] ï¿½v?ï¿½C?ï¿½Éƒnï¿½Cï¿½Xï¿½sï¿½ï¿½ÏXï¿½ï¿½ï¿½ï¿½Tï¿½Oï¿½ï¿½ï¿½ØƒRï¿½[ï¿½h
 local speedkills_Initialized = false;
 local speedMode = {
 	PlayerNumber_P1 = 'x',
@@ -18,7 +18,7 @@ local targetBPM = {
 t[#t+1] = Def.ActorFrame {
 	OnCommand = function(self)
 		-- Get max BPM for M-Mod HACK
-		-- [ja] Œãq‚ÌHACK‚Ì‚½‚ß‚ÉÅ‘åBPM‚ğæ“¾
+		-- [ja] ï¿½ï¿½qï¿½ï¿½HACKï¿½Ì‚ï¿½ï¿½ß‚ÉÅ‘ï¿½BPMï¿½ï¿½ï¿½æ“¾
 		local pns = {
 			'PlayerNumber_P1',
 			'PlayerNumber_P2',
@@ -79,14 +79,14 @@ t[#t+1] = Def.ActorFrame {
 				end;
 
 				-- Get speed mode (x/m/C) and target BPM
-				-- [ja] ƒnƒCƒXƒs‚Ì?[ƒh (x/m/C) ‚Æ–Ú•WBPM‚ğæ“¾
+				-- [ja] ï¿½nï¿½Cï¿½Xï¿½sï¿½ï¿½?ï¿½[ï¿½h (x/m/C) ï¿½Æ–Ú•WBPMï¿½ï¿½ï¿½æ“¾
 				local ps = GAMESTATE:GetPlayerState(v);
 				local po = ps:GetPlayerOptions("ModsLevel_Preferred");
 
 				local XMod = po:XMod() or 0;
 				local MMod = po:MMod() or 0;
 
-				-- [ja] ƒR[ƒh‚ğŒ©‚éŒÀ‚èGetCMod()‚Í³‚µ‚­“®ì‚µ‚È‚¢H
+				-- [ja] ï¿½Rï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½GetCMod()ï¿½Íï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì‚µï¿½È‚ï¿½ï¿½H
 				-- local CMod = po:GetCMod();
 				local modstring = ps:GetPlayerOptionsString("ModsLevel_Preferred");
 				local CModString = string.match(modstring, "[Cc](%d+)") or "0";
@@ -106,7 +106,7 @@ t[#t+1] = Def.ActorFrame {
 				end;
 
 				-- debug message
-				-- [ja] ƒfƒoƒbƒO—p
+				-- [ja] ï¿½fï¿½oï¿½bï¿½Oï¿½p
 				SCREENMAN:SystemMessage(string.format("%s: Speed: %s%.0f Max BPM: %.0f", v, speedMode[v], targetBPM[v], maxBPM[v]));
 			end;
 		end;
@@ -141,7 +141,7 @@ t[#t+1] = Def.ActorFrame {
 			local modstring = ps:GetPlayerOptionsString("ModsLevel_Preferred");
 
 			-- HACK: Add "default, " to prevent crash
-			-- [ja] ƒN?ƒbƒV?‚ğ–h‚®‚½‚ß‚Éudefault, v‚ğ•t‚¯‰Á‚¦‚é
+			-- [ja] ï¿½N?ï¿½bï¿½V?ï¿½ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½ß‚Éudefault, ï¿½vï¿½ï¿½tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			modstring = "default, " .. modstring;
 			modstring = modstring .. ", " .. speed .. "x";
 
@@ -175,18 +175,18 @@ t[#t+1] = Def.ActorFrame {
 			local modstring = ps:GetPlayerOptionsString("ModsLevel_Preferred");
 
 			-- HACK: Add "default, " to prevent crash
-			-- [ja] ƒN?ƒbƒV?‚ğ–h‚®‚½‚ß‚Éudefault, v‚ğ•t‚¯‰Á‚¦‚é
+			-- [ja] ï¿½N?ï¿½bï¿½V?ï¿½ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½ß‚Éudefault, ï¿½vï¿½ï¿½tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			modstring = "default, " .. modstring;
 
 			if speedMode[pn] == 'm' then
-				-- [ja] BPM‚ª0‚¾‚Æ‚Ç‚¤‘«‘~‚¢‚Ä‚à‘¬“x‚ª–³ŒÀ‚É‚È‚é‚Ì‚Å?’f
+				-- [ja] BPMï¿½ï¿½0ï¿½ï¿½ï¿½Æ‚Ç‚ï¿½ï¿½ï¿½ï¿½~ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É‚È‚ï¿½Ì‚ï¿½?ï¿½f
 				if maxBPM[pn] == 0 then
 					SCREENMAN:SystemMessage("m-Mod with 0 BPM, speed cannot be changed...");
 					return;
 				end;
 
 				-- HACK: Add X-Mod, because M-Mod cannot be applied in gameplay
-				-- [ja] M-Mod‚Íƒv?ƒC?‚É‚Í‚»‚Ì‚Ü‚Ü“K—p‚³‚ê‚È‚¢‚Ì‚ÅX-Mod‚à•t‚¯‰Á‚¦‚é
+				-- [ja] M-Modï¿½Íƒv?ï¿½C?ï¿½É‚Í‚ï¿½ï¿½Ì‚Ü‚Ü“Kï¿½pï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½Ì‚ï¿½X-Modï¿½ï¿½ï¿½tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				modstring = modstring .. ", " .. (targetBPM[pn] / maxBPM[pn]) .. 'x';
 			end;
 

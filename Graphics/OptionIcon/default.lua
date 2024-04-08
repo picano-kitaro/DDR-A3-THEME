@@ -22,7 +22,21 @@ return Def.ActorFrame {
 			Font="OptionIcon Speed",
 			OnCommand=function(self)
 				self:y(1):zoomx(0.78):zoomy(0.74):maxwidth(34)
-				self:settext("x"..GAMESTATE:GetPlayerState(pn):GetPlayerOptions("ModsLevel_Preferred"):ScrollSpeed());
+
+				local modstring = GAMESTATE:GetPlayerState(pn):GetPlayerOptionsString("ModsLevel_Preferred");
+				local CModString = string.match(modstring, "[Cc](%d+)") or "0";
+				local CMod = tonumber(CModString);
+
+				local speedMode = 'x';
+				local targetBPM = GAMESTATE:GetPlayerState(pn):GetPlayerOptions("ModsLevel_Preferred"):ScrollSpeed();
+
+				if CMod >= 0.5 then
+					speedMode = 'C';
+					targetBPM = CMod;
+				end;
+
+				self:y(1):zoomx(0.78):zoomy(0.74):maxwidth(34)
+				self:settext(speedMode..targetBPM);
 			end;	
 		};
 	};

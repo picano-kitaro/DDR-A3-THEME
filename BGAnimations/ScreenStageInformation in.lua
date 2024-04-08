@@ -1,13 +1,14 @@
 for _, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
 	if GetUserPref("OptionRowGameplayBackground")=='DanceStages' then
+		local SelectedCharacter = ReadOrCreatRageValueForPlayer(pn, "Character", "Random")
 		local CharaRandom = GetAllCharacterNames()
 			table.remove(CharaRandom,IndexKey(CharaRandom,"Random"))
 			table.remove(CharaRandom,IndexKey(CharaRandom,"None"))
-		if GetUserPref("SelectCharacter"..pn) == "Random" then
+		if SelectedCharacter == "Random" then
 			WritePrefToFile("CharaRandom"..pn,CharaRandom[math.random(#CharaRandom)]);
 		end
-		if GetUserPref("SelectCharacter"..pn) ~= "Random" then
-			GAMESTATE:SetCharacter(pn,GetUserPref("SelectCharacter"..pn))
+		if SelectedCharacter ~= "Random" then
+			GAMESTATE:SetCharacter(pn,SelectedCharacter)
 		else
 			GAMESTATE:SetCharacter(pn,GetUserPref("CharaRandom"..pn))
 		end
