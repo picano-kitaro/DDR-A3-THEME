@@ -1,7 +1,7 @@
 local t = Def.ActorFrame {};
 -- speedkills
 -- proof of concept for in-gameplay speed change
--- [ja] �v?�C?�Ƀn�C�X�s��ύX����T�O���؃R�[�h
+-- [ja] プ?イ?にハイスピを変更する概念実証コード
 local speedkills_Initialized = false;
 local speedMode = {
 	PlayerNumber_P1 = 'x',
@@ -18,7 +18,7 @@ local targetBPM = {
 t[#t+1] = Def.ActorFrame {
 	OnCommand = function(self)
 		-- Get max BPM for M-Mod HACK
-		-- [ja] ��q��HACK�̂��߂ɍő�BPM���擾
+		-- [ja] 後述のHACKのために最大BPMを取得
 		local pns = {
 			'PlayerNumber_P1',
 			'PlayerNumber_P2',
@@ -79,14 +79,14 @@ t[#t+1] = Def.ActorFrame {
 				end;
 
 				-- Get speed mode (x/m/C) and target BPM
-				-- [ja] �n�C�X�s��?�[�h (x/m/C) �ƖڕWBPM���擾
+				-- [ja] ハイスピの?ード (x/m/C) と目標BPMを取得
 				local ps = GAMESTATE:GetPlayerState(v);
 				local po = ps:GetPlayerOptions("ModsLevel_Preferred");
 
 				local XMod = po:XMod() or 0;
 				local MMod = po:MMod() or 0;
 
-				-- [ja] �R�[�h���������GetCMod()�͐��������삵�Ȃ��H
+				-- [ja] コードを見る限りGetCMod()は正しく動作しない？
 				-- local CMod = po:GetCMod();
 				local modstring = ps:GetPlayerOptionsString("ModsLevel_Preferred");
 				local CModString = string.match(modstring, "[Cc](%d+)") or "0";
@@ -106,7 +106,7 @@ t[#t+1] = Def.ActorFrame {
 				end;
 
 				-- debug message
-				-- [ja] �f�o�b�O�p
+				-- [ja] デバッグ用
 				SCREENMAN:SystemMessage(string.format("%s: Speed: %s%.0f Max BPM: %.0f", v, speedMode[v], targetBPM[v], maxBPM[v]));
 			end;
 		end;
@@ -141,7 +141,7 @@ t[#t+1] = Def.ActorFrame {
 			local modstring = ps:GetPlayerOptionsString("ModsLevel_Preferred");
 
 			-- HACK: Add "default, " to prevent crash
-			-- [ja] �N?�b�V?��h�����߂Ɂudefault, �v��t��������
+			-- [ja] ク?ッシ?を防ぐために「default, 」を付け加える
 			modstring = "default, " .. modstring;
 			modstring = modstring .. ", " .. speed .. "x";
 
@@ -175,18 +175,18 @@ t[#t+1] = Def.ActorFrame {
 			local modstring = ps:GetPlayerOptionsString("ModsLevel_Preferred");
 
 			-- HACK: Add "default, " to prevent crash
-			-- [ja] �N?�b�V?��h�����߂Ɂudefault, �v��t��������
+			-- [ja] ク?ッシ?を防ぐために「default, 」を付け加える
 			modstring = "default, " .. modstring;
 
 			if speedMode[pn] == 'm' then
-				-- [ja] BPM��0���Ƃǂ����~���Ă����x�������ɂȂ�̂�?�f
+				-- [ja] BPMが0だとどう足掻いても速度が無限になるので?断
 				if maxBPM[pn] == 0 then
 					SCREENMAN:SystemMessage("m-Mod with 0 BPM, speed cannot be changed...");
 					return;
 				end;
 
 				-- HACK: Add X-Mod, because M-Mod cannot be applied in gameplay
-				-- [ja] M-Mod�̓v?�C?�ɂ͂��̂܂ܓK�p����Ȃ��̂�X-Mod���t��������
+				-- [ja] M-Modはプ?イ?にはそのまま適用されないのでX-Modも付け加える
 				modstring = modstring .. ", " .. (targetBPM[pn] / maxBPM[pn]) .. 'x';
 			end;
 
