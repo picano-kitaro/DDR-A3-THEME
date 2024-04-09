@@ -574,10 +574,10 @@ function SNEnv()
 end
 --------------------
 
-function Mate1()
+function MateBase(MateName)
 	local choiceList = GetAllCharacterNames()
 	local t = {
-		Name = "Mate1";
+		Name = MateName;
 		LayoutType = "ShowAllInRow";
 		SelectType = "SelectOne";
 		OneChoiceForAllPlayers = true;
@@ -586,86 +586,36 @@ function Mate1()
 
 		LoadSelections = 
 		function(self, list, pn)
-			if GetUserPref("Mate1") == nil then
-				SetUserPref("Mate1","None")
+			if GetUserPref(MateName) == nil then
+				SetUserPref(MateName,"None")
 			end
-			local DMLoad=GetUserPref("Mate1")
+			local DMLoad=GetUserPref(MateName)
 			list[IndexKey(choiceList,DMLoad)]=true
 		end;
 
 		SaveSelections = 
 		function(self, list, pn)
 			for number=0,999 do
-				if list[number] then WritePrefToFile("Mate1",choiceList[number]);
+				if list[number] then WritePrefToFile(MateName,choiceList[number]);
 				end;
 			end;
 		end;
 	};        
-setmetatable( t, t );
-return t;
+	setmetatable( t, t );
+	return t;
+end
+
+function Mate1()
+	return MateBase("Mate1")
 end;
 
 
 function Mate2()
-	local choiceList = GetAllCharacterNames()
-	local t = {
-		Name = "Mate2";
-		LayoutType = "ShowAllInRow";
-		SelectType = "SelectOne";
-		OneChoiceForAllPlayers = true;
-		ExportOnChange = false;
-		Choices = choiceList;
-
-		LoadSelections = 
-		function(self, list, pn)
-			if GetUserPref("Mate2") == nil then
-				SetUserPref("Mate2","None")
-			end
-			local DMLoad=GetUserPref("Mate2")
-			list[IndexKey(choiceList,DMLoad)]=true
-		end;
-
-		SaveSelections = 
-		function(self, list, pn)
-			for number=0,999 do
-				if list[number] then WritePrefToFile("Mate2",choiceList[number]);
-				end;
-			end;
-		end;
-	};        
-setmetatable( t, t );
-return t;
+	return MateBase("Mate2")
 end;
 
 function Mate3()
-	local choiceList = GetAllCharacterNames()
-	local t = {
-		Name = "Mate3";
-		LayoutType = "ShowAllInRow";
-		SelectType = "SelectOne";
-		OneChoiceForAllPlayers = true;
-		ExportOnChange = false;
-		Choices = choiceList;
-
-		LoadSelections = 
-		function(self, list, pn)
-			if GetUserPref("Mate3") == nil then
-				SetUserPref("Mate3","None")
-			end
-			local DMLoad=GetUserPref("Mate3")
-			list[IndexKey(choiceList,DMLoad)]=true
-		end;
-
-		SaveSelections = 
-		function(self, list, pn)
-			for number=0,999 do
-				if list[number] then WritePrefToFile("Mate3",choiceList[number]);
-				end;
-			end;
-		end;
-	};        
-setmetatable( t, t );
-return t;
+	return MateBase("Mate3")
 end;
 
 function DDRandom()
