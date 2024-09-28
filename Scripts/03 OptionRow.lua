@@ -11,7 +11,7 @@ function OptionRowSpeed()
 		table.insert(names, i.."x")
 	end
 
-	local cMods = {"100","150","200","250","300","350","400"} 
+	local cMods = {"100","150","200","250","300","350","400","450","500","550","600"}
 	for _, i in ipairs(cMods) do
 		table.insert(options, string.format("mod,c%s;name,c%s", i, i))
 		table.insert(names, "c"..i)
