@@ -230,7 +230,7 @@ local function MakeRow(rownames, idx)
 					if choice == 0 then
 						s:Load(THEME:GetPathG("","_shared/stages_default"))
 					elseif choice == 1 then
-						s:Load(THEME:GetPathG("","_shared/stages_ratndom"))
+						s:Load(THEME:GetPathG("","_shared/stages_random"))
 					elseif choice == nil or DanceStagesList[choice+1] == nil then
 						-- Do nothing, maybe this'll fix the character list breaking
 					else	
