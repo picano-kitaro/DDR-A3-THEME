@@ -40,7 +40,7 @@ end
 
 -- I hate this. I'm only writing this generic function for compatability
 -- and easier future update sake
-function ReadOrCreatRageValueForPlayer(PlayerNumber, ValueName, DefaultValue)
+function ReadOrCreateRageValueForPlayer(PlayerNumber, ValueName, DefaultValue)
 	local PlayerUID = GetPlayerUIDFromNumber(PlayerNumber)
 	local File = RageFileUtil:CreateRageFile()
 	if File:Open("Save/"..ValueName.."/"..PlayerUID..".txt",1) then 

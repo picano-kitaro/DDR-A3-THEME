@@ -192,7 +192,7 @@ function SelectCharacter()
 
 		LoadSelections = 
 		function(self, list, pn)
-			local character = ReadOrCreatRageValueForPlayer(pn, "Character", "Random")
+			local character = ReadOrCreateRageValueForPlayer(pn, "Character", "Random")
 
 			list[IndexKey(choiceList,character)]=true
 		end;

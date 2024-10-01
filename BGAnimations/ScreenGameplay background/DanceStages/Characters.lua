@@ -38,7 +38,7 @@ local t = Def.ActorFrame{};
 
 if GAMESTATE:IsDemonstration() then
 	for pn in ivalues(GAMESTATE:GetEnabledPlayers()) do
-		local SelectedCharacter = ReadOrCreatRageValueForPlayer(pn, "Character", "Random")
+		local SelectedCharacter = ReadOrCreateRageValueForPlayer(pn, "Character", "Random")
 		local CharaRandom = GetAllCharacterNames()
 			table.remove(CharaRandom,IndexKey(CharaRandom,"Random"))
 			table.remove(CharaRandom,IndexKey(CharaRandom,"None"))

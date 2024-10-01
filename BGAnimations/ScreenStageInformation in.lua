@@ -1,6 +1,6 @@
 for _, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
 	if GetUserPref("OptionRowGameplayBackground")=='DanceStages' then
-		local SelectedCharacter = ReadOrCreatRageValueForPlayer(pn, "Character", "Random")
+		local SelectedCharacter = ReadOrCreateRageValueForPlayer(pn, "Character", "Random")
 		local CharaRandom = GetAllCharacterNames()
 			table.remove(CharaRandom,IndexKey(CharaRandom,"Random"))
 			table.remove(CharaRandom,IndexKey(CharaRandom,"None"))

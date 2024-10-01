@@ -22,7 +22,7 @@ if (not HasVideo() and not PotentialModSong()) or (HasVideo() and VideoStage() a
 t[#t+1] = LoadActor(StagesFolder..DanceStage.."/LoaderA.lua" )
 
 -------------- CHARACTERS --------------
-if not (ReadOrCreatRageValueForPlayer(PLAYER_1, "Character", "Random") == "None") or (ReadOrCreatRageValueForPlayer(PLAYER_2, "Character", "Random") == "None") then
+if not (ReadOrCreateRageValueForPlayer(PLAYER_1, "Character", "Random") == "None") or (ReadOrCreateRageValueForPlayer(PLAYER_2, "Character", "Random") == "None") then
 	t[#t+1] = LoadActor("Characters");
 end
 ------- DANCESTAGE LOADER 2 -------
