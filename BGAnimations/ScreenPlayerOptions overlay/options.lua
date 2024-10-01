@@ -230,7 +230,9 @@ local function MakeRow(rownames, idx)
 					if choice == 0 then
 						s:Load(THEME:GetPathG("","_shared/stages_default"))
 					elseif choice == 1 then
-						s:Load(THEME:GetPathG("","_shared/stages_random"))
+						s:Load(THEME:GetPathG("","_shared/stages_ratndom"))
+					elseif choice == nil or DanceStagesList[choice+1] == nil then
+						-- Do nothing, maybe this'll fix the character list breaking
 					else	
 						if FILEMAN:DoesFileExist("/DanceStages/"..DanceStagesList[choice+1].."/Card.png") then
 							s:Load("/DanceStages/"..DanceStagesList[choice+1].."/Card.png")				
