@@ -136,9 +136,10 @@ function ReFillList(list1,list2)
     end
 end
 
-local characterNameCache;
-function GetAllCharacterNames()
-	if characterNameCache and next(characterNameCache) ~= nil then
+characterNameCache = nil;
+function GetAllCharacterNames(forceRefresh)
+	forceRefresh = forceRefresh or false
+	if not forceRefresh and characterNameCache and next(characterNameCache) ~= nil then
 		return characterNameCache;
 	end;
     local chars = {}
@@ -181,7 +182,13 @@ function GetAllCharacterNames()
 end
 
 function SelectCharacter()
+	Trace("SelectCharacter called")
 	local choiceList = GetAllCharacterNames()
+	local load = function(self, list, pn)
+		local character = ReadOrCreateRageValueForPlayer(pn, "Character", "Random")
+
+		list[IndexKey(choiceList,character)]=true
+	end;
 	local t = {
 		Name = "Characters";
 		LayoutType = "ShowAllInRow";
@@ -192,23 +199,36 @@ function SelectCharacter()
 
 		LoadSelections = 
 		function(self, list, pn)
-			local character = ReadOrCreateRageValueForPlayer(pn, "Character", "Random")
-
-			list[IndexKey(choiceList,character)]=true
+			Trace("SelectCharacter LoadSelections called")
+			for i, x in ipairs(choiceList) do
+				Trace(i..":"..x)
+			end
+			if pcall(load, self, list, pn) then
+				Trace("SelectCharacter pcall success")
+			else
+				Trace("SelectCharacter pcall failed")
+				choiceList = GetAllCharacterNames(true)
+				load(self, list, pn)
+				Trace("SelectCharacter pcall retry worked")
+			end
+			Trace("SelectCharacter LoadSelections completed")
 		end;
 
 		SaveSelections = 
 		function(self, list, pn)
+			Trace("SelectCharacter SaveSelections called")
 			for number=0,999 do
 				if list[number] then
 					SaveRageValueForPlayer(pn, "Character", choiceList[number])
 					break;
 				end;
 			end;
+			Trace("SelectCharacter SaveSelections completed")
 		end;
 	};        
-setmetatable( t, t );
-return t;
+	setmetatable( t, t );
+	Trace("SelectCharacter completed")
+	return t;
 end;
 
 function SpecialChar()
