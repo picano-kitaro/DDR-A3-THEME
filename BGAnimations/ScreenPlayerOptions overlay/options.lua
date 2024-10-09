@@ -32,9 +32,9 @@ else
 	if GetUserPref("OptionRowGameplayBackground")=='DanceStages' then
 		table.insert(rownames, "DanceStage")
 		table.insert(rownames, "Character")
-		-- table.insert(rownames, "Mate1")
-		-- table.insert(rownames, "Mate2")
-		-- table.insert(rownames, "Mate3")
+		table.insert(rownames, "Mate1")
+		table.insert(rownames, "Mate2")
+		table.insert(rownames, "Mate3")
 	elseif GetUserPref("OptionRowGameplayBackground")=='SNCharacters' then
 		table.insert(rownames, "Characters")
 	end
@@ -47,6 +47,10 @@ local function GetOptionName(screen, idx)
 end
 
 local exitIndex = #rownames
+
+function isCharacterScreen(name)
+	return name == "Characters" or name == "Mate1" or name == "Mate2" or name == "Mate3";
+end;
 
 function setting(self,screen)
 	local screen = SCREENMAN:GetTopScreen();
@@ -253,7 +257,9 @@ local function MakeRow(rownames, idx)
 					local screen = SCREENMAN:GetTopScreen();
 					local song = GAMESTATE:GetCurrentSong()
 					if screen then
-						if GetOptionName(screen,idx) == "Characters" then
+						local name = GetOptionName(screen,idx);
+						local show = isCharacterScreen(name);
+						if show then
 							self:visible(true):xy(pn==PLAYER_1 and -280 or 280,-150):zoom(0.3)
 						end
 					else
@@ -264,7 +270,9 @@ local function MakeRow(rownames, idx)
 			GainFocusCommand=function(s) s:finishtweening()
 				local screen = SCREENMAN:GetTopScreen();
 				local song = GAMESTATE:GetCurrentSong()
-				s:diffusealpha(GetOptionName(screen,idx) == "Characters" and 1 or 0)
+				local name = GetOptionName(screen,idx);
+				local show = isCharacterScreen(name);
+				s:diffusealpha(show and 1 or 0)
 			end,
 			LoseFocusCommand=function(s) s:finishtweening():diffusealpha(0) end,
 			[p"MenuLeft%MessageCommand"]=function(s) s:playcommand("Set") end,
@@ -318,7 +326,7 @@ local function MakeRow(rownames, idx)
 						else		
 							self:settext(DanceStagesNames[choice+1]):diffuse(color("1,1,1,1"))
 						end
-					elseif name == "Characters" then
+					elseif isCharacterScreen(name)  then
 						if GetUserPref("OptionRowGameplayBackground")=='DanceStages' then
 							local chars = GetAllCharacterNames()
 							if choice == 0 then

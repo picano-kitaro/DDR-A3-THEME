@@ -394,7 +394,7 @@ function OptionNumber()
 	end
 	
 	if GetUserPref("OptionRowGameplayBackground")=='DanceStages' then
-		opts = opts..",SelectStage,SelectCharacter" --,Mate1,Mate2,Mate3"
+		opts = opts..",SelectStage,SelectCharacter,Mate1,Mate2,Mate3"
 	elseif GetUserPref("OptionRowGameplayBackground")=='SNCharacters' then
 		opts = opts..",Characters"
 	end
