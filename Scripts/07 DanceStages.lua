@@ -174,8 +174,8 @@ function GetAllCharacterNames(forceRefresh)
     SortList(_chars,chars,"%(2nd%)")
     SortList(_chars,chars,"%(1st%)")
     ReFillList(_chars,chars)
-    table.remove(chars,IndexKey(chars,"DanceRepo"))
-    table.remove(chars,IndexKey(chars,"default"))
+    table_find_remove(chars,"DanceRepo")
+    table_find_remove(chars,"default")
     table.insert(chars,1,"Random")
 	characterNameCache = chars;
     return chars
@@ -264,7 +264,7 @@ function GetAllDanceStagesNames()
 	end;
     local DanceStagesList = {}
     local _DanceStagesList = FILEMAN:GetDirListing("/DanceStages/", true, false)
-    table.remove(_DanceStagesList,IndexKey(_DanceStagesList,"StageMovies"))
+    table_find_remove(_DanceStagesList,"StageMovies")
     SortList(_DanceStagesList,DanceStagesList,"%(A%)")
     SortList(_DanceStagesList,DanceStagesList,"%(2014%)")
 	SortList(_DanceStagesList,DanceStagesList,"%(X2%)")
@@ -676,9 +676,9 @@ function AssignedDanceStage()
 end
 
 function DanceStageLoader()
-	local DanceStagesDir = GetAllDanceStagesNames()
-	table.remove(DanceStagesDir,IndexKey(DanceStagesDir,"DEFAULT"))
-	table.remove(DanceStagesDir,IndexKey(DanceStagesDir,"RANDOM"))
+	local DanceStagesDir = table_shallow_copy(GetAllDanceStagesNames())
+	table_find_remove(DanceStagesDir,"DEFAULT")
+	table_find_remove(DanceStagesDir,"RANDOM")
 	local DanceStageSelected = GetUserPref("SelectDanceStage")
 
 	local DanceStage = AssignedDanceStage()

@@ -39,9 +39,9 @@ local t = Def.ActorFrame{};
 if GAMESTATE:IsDemonstration() then
 	for pn in ivalues(GAMESTATE:GetEnabledPlayers()) do
 		local SelectedCharacter = ReadOrCreateRageValueForPlayer(pn, "Character", "Random")
-		local CharaRandom = GetAllCharacterNames()
-			table.remove(CharaRandom,IndexKey(CharaRandom,"Random"))
-			table.remove(CharaRandom,IndexKey(CharaRandom,"None"))
+		local CharaRandom = table_shallow_copy(GetAllCharacterNames())
+		table_find_remove(CharaRandom,"Random")
+		table_find_remove(CharaRandom,"None")
 		if SelectedCharacter == "Random" then
 			WritePrefToFile("CharaRandom"..pn,CharaRandom[math.random(#CharaRandom)]);
 		end
@@ -68,12 +68,12 @@ Listed = {
 	for i=1,#Listed do
 		for i=1,#Listed do
 			if Listed[i] == "None" then
-				table.remove(Listed,IndexKey(Listed,"None"))
+				table_find_remove(Listed,"None")
 			end
 			if Listed[i] == "Random" then
-				local CharaRandom = GetAllCharacterNames()
-				table.remove(CharaRandom,IndexKey(CharaRandom,"Random"))
-				table.remove(CharaRandom,IndexKey(CharaRandom,"None"))
+				local CharaRandom = table_shallow_copy(GetAllCharacterNames())
+				table_find_remove(CharaRandom,"Random")
+				table_find_remove(CharaRandom,"None")
 				Listed[i]=CharaRandom[math.random(#CharaRandom)]
 			end
 		end

@@ -129,6 +129,14 @@ function table_find_remove(tab, thing)
 	if index then table.remove(tab, index) end
 end
 
+function table_shallow_copy(t)
+	local t2 = {}
+	for k,v in pairs(t) do
+	  t2[k] = v
+	end
+	return t2
+  end
+
 function force_table_elements_to_match_type(candidate, must_match, depth_remaining, exceptions)
 	for k, v in pairs(candidate) do
 		if not string_in_table(k, exceptions) then
