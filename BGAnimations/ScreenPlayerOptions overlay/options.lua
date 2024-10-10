@@ -48,7 +48,7 @@ end
 
 local exitIndex = #rownames
 
-function isCharacterScreen(name)
+function isCharactersOption(name)
 	return name == "Characters" or name == "Mate1" or name == "Mate2" or name == "Mate3";
 end;
 
@@ -258,7 +258,7 @@ local function MakeRow(rownames, idx)
 					local song = GAMESTATE:GetCurrentSong()
 					if screen then
 						local name = GetOptionName(screen,idx);
-						local show = isCharacterScreen(name);
+						local show = isCharactersOption(name);
 						if show then
 							self:visible(true):xy(pn==PLAYER_1 and -280 or 280,-150):zoom(0.3)
 						end
@@ -271,7 +271,7 @@ local function MakeRow(rownames, idx)
 				local screen = SCREENMAN:GetTopScreen();
 				local song = GAMESTATE:GetCurrentSong()
 				local name = GetOptionName(screen,idx);
-				local show = isCharacterScreen(name);
+				local show = isCharactersOption(name);
 				s:diffusealpha(show and 1 or 0)
 			end,
 			LoseFocusCommand=function(s) s:finishtweening():diffusealpha(0) end,
@@ -326,7 +326,7 @@ local function MakeRow(rownames, idx)
 						else		
 							self:settext(DanceStagesNames[choice+1]):diffuse(color("1,1,1,1"))
 						end
-					elseif isCharacterScreen(name)  then
+					elseif isCharactersOption(name)  then
 						if GetUserPref("OptionRowGameplayBackground")=='DanceStages' then
 							local chars = GetAllCharacterNames()
 							if choice == 0 then
