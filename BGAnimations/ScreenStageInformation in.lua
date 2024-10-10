@@ -1,11 +1,8 @@
 for _, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
 	if GetUserPref("OptionRowGameplayBackground")=='DanceStages' then
 		local SelectedCharacter = ReadOrCreateRageValueForPlayer(pn, "Character", "Random")
-		local CharaRandom = table_shallow_copy(GetAllCharacterNames())
-		table_find_remove(CharaRandom,"Random")
-		table_find_remove(CharaRandom,"None")
 		if SelectedCharacter == "Random" then
-			WritePrefToFile("CharaRandom"..pn,CharaRandom[math.random(#CharaRandom)]);
+			WritePrefToFile("CharaRandom"..pn,GetRandomCharacterName());
 		end
 		if SelectedCharacter ~= "Random" then
 			GAMESTATE:SetCharacter(pn,SelectedCharacter)

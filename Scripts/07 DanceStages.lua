@@ -136,6 +136,16 @@ function ReFillList(list1,list2)
     end
 end
 
+function GetRandomCharacterName()
+	local chars = GetAllCharacterNames()
+	-- If not enough characters, default
+	if #chars - 2 <= 0 then
+		return "None"
+	end
+	-- Skip first and last options "None" and "Random"
+	return chars[math.random(#chars - 2) + 1]
+end
+
 characterNameCache = nil;
 function GetAllCharacterNames(forceRefresh)
 	forceRefresh = forceRefresh or false
