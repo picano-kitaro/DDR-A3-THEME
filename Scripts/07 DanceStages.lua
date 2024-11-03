@@ -192,7 +192,7 @@ function GetAllCharacterNames(forceRefresh)
 end
 
 function SelectCharacter()
-	Trace("SelectCharacter called")
+	-- Trace("SelectCharacter called")
 	local choiceList = GetAllCharacterNames()
 	local load = function(self, list, pn)
 		local character = ReadOrCreateRageValueForPlayer(pn, "Character", "Random")
@@ -209,35 +209,35 @@ function SelectCharacter()
 
 		LoadSelections = 
 		function(self, list, pn)
-			Trace("SelectCharacter LoadSelections called")
-			for i, x in ipairs(choiceList) do
-				Trace(i..":"..x)
-			end
+			-- Trace("SelectCharacter LoadSelections called")
+			-- for i, x in ipairs(choiceList) do
+			-- 	Trace(i..":"..x)
+			-- end
 			if pcall(load, self, list, pn) then
-				Trace("SelectCharacter pcall success")
+				-- Trace("SelectCharacter pcall success")
 			else
-				Trace("SelectCharacter pcall failed")
+				-- Trace("SelectCharacter pcall failed")
 				choiceList = GetAllCharacterNames(true)
 				load(self, list, pn)
-				Trace("SelectCharacter pcall retry worked")
+				-- Trace("SelectCharacter pcall retry worked")
 			end
-			Trace("SelectCharacter LoadSelections completed")
+			-- Trace("SelectCharacter LoadSelections completed")
 		end;
 
 		SaveSelections = 
 		function(self, list, pn)
-			Trace("SelectCharacter SaveSelections called")
+			-- Trace("SelectCharacter SaveSelections called")
 			for number=0,999 do
 				if list[number] then
 					SaveRageValueForPlayer(pn, "Character", choiceList[number])
 					break;
 				end;
 			end;
-			Trace("SelectCharacter SaveSelections completed")
+			-- Trace("SelectCharacter SaveSelections completed")
 		end;
 	};        
 	setmetatable( t, t );
-	Trace("SelectCharacter completed")
+	-- Trace("SelectCharacter completed")
 	return t;
 end;
 
