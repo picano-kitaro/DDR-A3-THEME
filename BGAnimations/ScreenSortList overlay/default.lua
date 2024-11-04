@@ -13,6 +13,9 @@ local sortorders = {
 	"Popularity",
 	"Length",
 	"Preferred",
+	"Options",
+	"Profiles",
+	"Exit"
 }
 local mw = SCREENMAN:GetTopScreen():GetChild("MusicWheel")
 local curIndex = 1;
@@ -29,6 +32,14 @@ local function input(event, param)
 			MESSAGEMAN:Broadcast("MusicWheelSort")
 			if sortorders[curIndex] == "EasyMeter" then
 				mw:ChangeSort("SortOrder_"..ToEnumShortString(steps:GetDifficulty()).."Meter")
+			elseif sortorders[curIndex] == "Options" then
+				SCREENMAN:AddNewScreenToTop("ScreenPlayerOptions")
+				return false
+			elseif sortorders[curIndex] == "Profiles" then
+				SCREENMAN:AddNewScreenToTop("ScreenSelectProfile")
+				return false
+			elseif sortorders[curIndex] == "Exit" then
+				-- Do nothing
 			else
 				mw:ChangeSort("SortOrder_"..sortorders[curIndex])
 			end
@@ -176,7 +187,7 @@ local t = Def.ActorFrame{
 		},
 		Def.ActorScroller{
 			SecondsPerItem=0;
-			NumItemsToDraw=20;
+			NumItemsToDraw=50; -- Todo: Figure out why 20 to 50 worked
 			TransformFunction=function(self,offsetFromCenter,itemIndex,numItems)
 				self:y((offsetFromCenter*32)-170):draworder(math.abs(offsetFromCenter)*10)
 					if itemIndex%2==0 then
