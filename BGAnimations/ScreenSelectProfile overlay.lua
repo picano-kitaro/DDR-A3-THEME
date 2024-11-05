@@ -15,11 +15,28 @@ function(table, ind)
 end
 })
 
+local function ReloadPreviousProfiles()
+	local scrn = SCREENMAN:GetTopScreen();
+	-- Todo: Better way of getting the previous indexes
+	local initInd1 = p1Id;
+	local initInd2 = p2Id;
+
+	if initInd1 ~= nil and initInd1 > 0 then
+		scrn:SetProfileIndex("PlayerNumber_P1", initInd1 )
+	end
+	if initInd2 ~= nil and initInd2 > 0 then
+		scrn:SetProfileIndex("PlayerNumber_P2", initInd2 )
+	end
+end
+
 local function LoadCard(cColor,cColor2,Player,IsJoinFrame)
 	local t = Def.ActorFrame {
 		
 		Def.ActorFrame{
 		--Background Stuff
+			BeginCommand=function(self)
+				ReloadPreviousProfiles();
+			end;
 			InitCommand=function(s) s:zoomy(0) end,
 			OnCommand=function(s) s:linear(0.3):zoomy(1) end,
 			OffCommand=function(s) 
@@ -204,8 +221,14 @@ function LoadPlayerStuff(pn)
 	return t;
 end
 
+
 local function UpdateInternal3(self, Player)
 	local pn = (Player == PLAYER_1) and 1 or 2;
+	if pn == 1 then
+		p1Id = SCREENMAN:GetTopScreen():GetProfileIndex(Player)
+	else 
+		p2Id = SCREENMAN:GetTopScreen():GetProfileIndex(Player);
+	end
 	local frame = self:GetChild(string.format('P%uFrame', pn));
 	local ProfileText = frame:GetChild('ProfileText');
 	local joinframe = frame:GetChild('JoinFrame');
