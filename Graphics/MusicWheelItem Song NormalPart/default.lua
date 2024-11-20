@@ -235,7 +235,8 @@ return Def.ActorFrame{
 		SetMessageCommand=function(s,p)
 			local song = p.Song
 			if song then
-				if song:IsLong() then
+				-- Todo : Separate marathon graphics
+				if song:IsLong() or song:IsMarathon() then
 					s:visible(true)
 				else
 					s:visible(false)
