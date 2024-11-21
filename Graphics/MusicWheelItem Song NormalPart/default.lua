@@ -235,8 +235,21 @@ return Def.ActorFrame{
 		SetMessageCommand=function(s,p)
 			local song = p.Song
 			if song then
-				-- Todo : Separate marathon graphics
-				if song:IsLong() or song:IsMarathon() then
+				if song:IsLong() then
+					s:visible(true)
+				else
+					s:visible(false)
+				end
+			end
+		end,
+	};
+	Def.Sprite{
+		Texture=THEME:GetPathG("","_shared/"..Model().."marathon"),
+		InitCommand=function(s) s:visible(false):xy(-40,36):zoom(0.3) end,
+		SetMessageCommand=function(s,p)
+			local song = p.Song
+			if song then
+				if song:IsMarathon() then
 					s:visible(true)
 				else
 					s:visible(false)
